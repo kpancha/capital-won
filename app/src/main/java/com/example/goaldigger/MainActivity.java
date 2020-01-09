@@ -41,6 +41,13 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(Object result) {
                         List<Purchase> purchases = (List<Purchase>) result;
                         Log.d("message", purchases.toString());
+                        Double totalPurchases = 0.0;
+                        for (Purchase p : purchases){
+                            totalPurchases += p.getAmount();
+                            //Log.d("eachpurchase", p.getAmount().toString());
+                        }
+                        Log.d("totalpurchase", totalPurchases.toString());
+//                        Log.d(purchases.get(6));
                         //System.out.print(customers.toString());
                         // do something with the list of customers here
                     }
