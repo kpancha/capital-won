@@ -66,9 +66,16 @@ public class PlaceholderFragment extends Fragment {
         Double num = goal.getPercentSaved() * 100;
         circle.setProgress(Math.toIntExact(Math.round(num)));
 
+
         ProgressBar bar = v.findViewById(R.id.determinateBar);
-        //Double percent = PERCENTofWEEKLYSPENDINGvsGOALs;
-        bar.setProgress(20);
+        Double percent = goal.getThisWeekSpending() / goal.calcWeeklyGoal() * 100;
+////        if (percent <= 50) {
+////            ((ProgressBar) v.findViewById(R.id.determinateBar)).setProgressTintList();
+////        }
+        Log.d("percent", Double.toString(percent));
+        bar.setProgress(Math.toIntExact(Math.round(percent)));
+        Log.d("thisWeekSpending", Double.toString(goal.getThisWeekSpending()));
+        Log.d("weekly goal", Double.toString(goal.calcWeeklyGoal()));
 
 
         /*

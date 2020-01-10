@@ -73,7 +73,7 @@
         android:layout_marginTop="8dp"
         android:text="Small savings add up!"
         android:textSize="18dp"
-        android:textStyle="italic"
+        android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />

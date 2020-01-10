@@ -215,6 +215,8 @@ public class MainActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         if (goalName != null) {
                             goal = new Goal(goalName, numWeeks, goalCost, savingsStart, weeklyAvg);
+                            goal.setThisWeekSpending(thisWeekSpending);
+                            goal.setFreqList(findTopFreqs());
                             String jsonGoal = gson.toJson(goal);
                             SharedPreferences.Editor editor = mPreferences.edit();
                             editor.putString("goal", jsonGoal);
@@ -325,6 +327,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+//;
     public ArrayList<String> findTopFreqs() {
         //Log.d("allMerchIDS", allmerchIDS.toString());
         Map<String, Integer> freqMap = new HashMap<>();
