@@ -54,7 +54,7 @@ public class PlaceholderFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        //return inflater.inflate(R.layout.fragment_main, container, false);
         //return inflater.inflate(R.layout.set_goal, container, false);
 
           View v =  inflater.inflate(R.layout.fragment_main, container, false);
