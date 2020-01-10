@@ -1,9 +1,15 @@
 package com.example.goaldigger;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.example.goaldigger.models.FragmentUiModel;
@@ -31,6 +37,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final static String CHANNEL_ID = "test";
+
 
     NessieClient client = NessieClient.getInstance("4db704c8f8b013300a4a960683da8399");
     String person1 = "5e173afc322fa016762f3794";
@@ -40,10 +48,19 @@ public class MainActivity extends AppCompatActivity {
     String startYear = startDate.substring(0,4);
     String startMonth = startDate.substring(5,7);
     String startDay = startDate.substring(8);
+    Double thisWeekSpending = 98.0; //CHANGE ONCE RECEIVE USER INPUT
     Double weeklyAvg = 0.0;
+
     Map<String, Double> categoryCost = new HashMap<>();
-    String[] nonessentials = {"restaurant", "night_club", "bar"};
     ArrayList<String> allmerchIDS = new ArrayList<>();
+    private String goalName;
+    private double goalCost;
+    private double savingsStart;
+
+    public static String GOAL_NAME_KEY = "goalName";
+    public static String GOAL_COST_KEY = "goalCost";
+    public static String SAVINGS_START_KEY = "savingsStart";
+
 
     public NessieClient getClient() {
         return client;
@@ -53,6 +70,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        createNotificationChannel();
+
+
+
+
+
+        goalName = getIntent().getStringExtra(GOAL_NAME_KEY);
+        goalCost = getIntent().getDoubleExtra(GOAL_COST_KEY, 0);
+        savingsStart = getIntent().getDoubleExtra(SAVINGS_START_KEY, 0);
+
 
         client.PURCHASE.getPurchasesByAccount("5e164472322fa016762f374c",
                 new NessieResultsListener() {
@@ -123,6 +150,14 @@ public class MainActivity extends AppCompatActivity {
 //                        Log.d(purchases.get(6));
                         //System.out.print(customers.toString());
                         // do something with the list of customers here
+
+
+                        //CHANGE from weekspending to weeksaving
+
+                        if (weeklyAvg > thisWeekSpending && thisWeekSpending > weeklyAvg-20) { //CHANGE to currently this week's spending using today's date
+                            displayNotification();
+                        }
+
                     }
 
                     @Override
@@ -186,33 +221,39 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*
-    public boolean categorize(Purchase p){
-        String mID = p.getMerchantId();
-        client.MERCHANT.getMerchant(mID, new NessieResultsListener() {
-            @Override
-            public void onSuccess(Object result) {
-                Merchant merchant = (Merchant) result;
-                List<String> categories = merchant.getCategories();
-                //health
-                if(categories.contains("health")
-                        | categories.contains("grocery_or_supermarket")
-                        | categories.contains("car_repair")){
-                    return false;
-                }
-                return true;
-            }
 
-            @Override
-            public void onFailure(NessieError error) {
-                Log.e("Error", error.getMessage());
-            }
-        });
-        //categoryCost.put();
-        //if(categoryCost.containsKey())
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "channel";
+            String description = "a channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
-    */
 
+    private void displayNotification()
+    {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_android_black_24dp)
+                .setContentTitle("Watch out!")
+                .setContentText("You're spending too much for this week.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat mNotificationMgr = NotificationManagerCompat.from(this);
+        Notification n = mBuilder.build();
+        //Log.d("debug", "displayNotification: " + n.toString());
+        mNotificationMgr.notify(1, n );
+
+
+
+    }
 
 
 }
