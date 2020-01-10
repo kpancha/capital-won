@@ -207,9 +207,9 @@ public class MainActivity extends AppCompatActivity {
 
                         //CHANGE from weekspending to weeksaving
 
-                        if (weeklyAvg > thisWeekSpending && thisWeekSpending > weeklyAvg-20) { //CHANGE to currently this week's spending using today's date
-                            displayNotification();
-                        }
+                        //if (weeklyAvg > thisWeekSpending && thisWeekSpending > weeklyAvg-20) { //CHANGE to currently this week's spending using today's date
+                        displayNotification();
+                        //}
 
                         mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
                         Gson gson = new Gson();
