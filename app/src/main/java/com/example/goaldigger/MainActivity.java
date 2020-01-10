@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     public static String GOAL_COST_KEY = "goalCost";
     public static String SAVINGS_START_KEY = "savingsStart";
     public static String NUM_WEEKS_KEY = "numWeeks";
+//    public static String START_WEEKS_KEY = "numWeeks";
 
 
 
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         final MainActivity m = this;
 
 
+        //Getting previous month purchases to calculate previous weekly spending
         client.PURCHASE.getPurchasesByAccount("5e164472322fa016762f374c",
                 new NessieResultsListener() {
                     @Override
@@ -170,6 +173,10 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         goal = new Goal(goalName, numWeeks, goalCost, savingsStart, weeklyAvg);
+                        goal.getStartDate();
+
+                        //adding fragments
+
 
                         ArrayList<FragmentUiModel> fragments = new ArrayList<>();
                         fragments.add(new FragmentUiModel("Your Progress", PlaceholderFragment.newInstance()));
