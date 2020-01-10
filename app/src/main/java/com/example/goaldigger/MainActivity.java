@@ -31,10 +31,13 @@ import android.widget.ProgressBar;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -182,6 +185,10 @@ public class MainActivity extends AppCompatActivity {
                         TabLayout tabLayout = findViewById(R.id.tabs);
                         tabLayout.setupWithViewPager(viewPager);
 
+                        List<String> l = findTopFreqs();
+                        //Log.d("freq1", l.get(0));
+                        //Log.d("freq2", l.get(1));
+
                     }
 
                     @Override
@@ -266,7 +273,34 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    public ArrayList<String> findTopFreqs() {
+        //Log.d("allMerchIDS", allmerchIDS.toString());
+        Map<String, Integer> freqMap = new HashMap<>();
+        for (String s : allmerchIDS) {
+            if (freqMap.containsKey(s)) {
+                int count = freqMap.get(s);
+                count++;
+                freqMap.put(s, count);
+            } else {
+                freqMap.put(s, 1);
+            }
+        }
+        //Log.d("hashmap", freqMap.toString());
+        PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>(freqMap.size(), new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> stringIntegerEntry, Map.Entry<String, Integer> t1) {
+                return t1.getValue().compareTo(stringIntegerEntry.getValue()); //should sort in descending order
+            }
+        });
+        for (Map.Entry<String, Integer> entry : freqMap.entrySet()) {
+            pq.add(entry);
+        }
+        ArrayList<String> list = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            list.add(pq.remove().getKey());
+        }
+        return list;
+    }
 }
 
 
