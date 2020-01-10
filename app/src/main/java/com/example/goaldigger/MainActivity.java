@@ -3,6 +3,8 @@ package com.example.goaldigger;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,6 +12,11 @@ import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.example.goaldigger.models.FragmentUiModel;
+import com.example.goaldigger.ui.main.PlaceholderFragment;
+import com.example.goaldigger.ui.main.SectionsPagerAdapter;
+import com.example.goaldigger.ui.main.SpendTrendsFragment;
+import com.google.android.material.tabs.TabLayout;
 import com.reimaginebanking.api.nessieandroidsdk.NessieResultsListener;
 import com.reimaginebanking.api.nessieandroidsdk.constants.TransactionMedium;
 import com.reimaginebanking.api.nessieandroidsdk.NessieError;
@@ -21,6 +28,7 @@ import com.reimaginebanking.api.nessieandroidsdk.requestclients.NessieClient;
 import android.util.Log;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -114,6 +122,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+        ArrayList<FragmentUiModel> fragments = new ArrayList<>();
+        fragments.add(new FragmentUiModel("Title 1", PlaceholderFragment.newInstance()));
+        fragments.add(new FragmentUiModel("Spend Trends", SpendTrendsFragment.newInstance()));
+
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(
+                new SectionsPagerAdapter(this, getSupportFragmentManager(), fragments)
+        );
+        TabLayout tabLayout = findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
 //        client.CUSTOMER.getCustomers(new NessieResultsListener() {
 //            @Override

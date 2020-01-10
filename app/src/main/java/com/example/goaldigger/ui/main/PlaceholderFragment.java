@@ -23,12 +23,8 @@ public class PlaceholderFragment extends Fragment {
 
     private PageViewModel pageViewModel;
 
-    public static PlaceholderFragment newInstance(int index) {
-        PlaceholderFragment fragment = new PlaceholderFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(ARG_SECTION_NUMBER, index);
-        fragment.setArguments(bundle);
-        return fragment;
+    public static PlaceholderFragment newInstance() {
+       return new PlaceholderFragment();
     }
 
     @Override
@@ -45,15 +41,8 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_main, container, false);
-        final TextView textView = root.findViewById(R.id.section_label);
-        pageViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
+            Bundle savedInstanceState
+    ) {
+        return inflater.inflate(R.layout.fragment_main, container, false);
     }
 }
