@@ -9,6 +9,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.goaldigger.R;
+import com.example.goaldigger.models.FragmentUiModel;
+
+import java.util.List;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -19,28 +22,30 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
     private final Context mContext;
+    private List<FragmentUiModel> listOfFragments;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm, List<FragmentUiModel> fragments) {
         super(fm);
         mContext = context;
+        this.listOfFragments = fragments;
     }
 
     @Override
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
+        return listOfFragments.get(position).getFragment();
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return mContext.getResources().getString(TAB_TITLES[position]);
+        return listOfFragments.get(position).getTitle();
     }
 
     @Override
     public int getCount() {
         // Show 2 total pages.
-        return 2;
+        return listOfFragments.size();
     }
 }
