@@ -25,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
     String person1 = "5e173afc322fa016762f3794";
     String person2 = "5e173afc322fa016762f3795";
     String person3 = "5e173afb322fa016762f3796";
+    String startDate = "2020-01-10"; //CHANGE ONCE RECEIVE USER INPUT
+    String startYear = startDate.substring(0,4);
+    String startMonth = startDate.substring(5,7);
+    String startDay = startDate.substring(8);
+    Double weeklyAvg = 0.0;
 
     public NessieClient getClient() {
         return client;
@@ -41,6 +46,39 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(Object result) {
                         List<Purchase> purchases = (List<Purchase>) result;
                         Log.d("message", purchases.toString());
+                        Double totalPurchases = 0.0;
+                        Integer yearBefore = 0;
+                        String strMonthBefore = "";
+
+                        if (startDate.charAt(6) == '1'){
+                            yearBefore = Integer.parseInt(startYear)-1; //just previous year
+                            strMonthBefore = yearBefore.toString(); //previous year in String
+                            String othersBefore = "12-" + startDay; //change month to string
+                            strMonthBefore = strMonthBefore + '-'+ othersBefore;
+                        }else{
+                            //don't change year
+                            yearBefore = Integer.parseInt(startMonth) - 1;
+                            strMonthBefore = startYear + '-' + yearBefore + '-' + startDay;
+                        }
+
+
+                        Log.d("beforeDate",strMonthBefore); //this is the date we will use to compare
+
+
+                        for (Purchase p : purchases){
+                            if ((p.getPurchaseDate()).compareTo(strMonthBefore)>0){
+                                Log.d("time", p.getPurchaseDate());
+                                totalPurchases += p.getAmount();
+                            }
+
+                            //Log.d("eachpurchase", p.getAmount().toString());
+
+                        }
+
+                        Log.d("totalpurchase", totalPurchases.toString());
+                        weeklyAvg = totalPurchases/4;
+                        Log.d("initial week spendavg!", weeklyAvg.toString());
+//                        Log.d(purchases.get(6));
                         //System.out.print(customers.toString());
                         // do something with the list of customers here
                     }
