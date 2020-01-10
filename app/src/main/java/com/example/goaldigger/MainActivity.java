@@ -57,10 +57,15 @@ public class MainActivity extends AppCompatActivity {
     private String goalName;
     private double goalCost;
     private double savingsStart;
+    private int numWeeks;
+    public Goal goal;
 
     public static String GOAL_NAME_KEY = "goalName";
     public static String GOAL_COST_KEY = "goalCost";
     public static String SAVINGS_START_KEY = "savingsStart";
+    public static String NUM_WEEKS_KEY = "numWeeks";
+
+
 
 
     public NessieClient getClient() {
@@ -80,6 +85,11 @@ public class MainActivity extends AppCompatActivity {
         goalName = getIntent().getStringExtra(GOAL_NAME_KEY);
         goalCost = getIntent().getDoubleExtra(GOAL_COST_KEY, 0);
         savingsStart = getIntent().getDoubleExtra(SAVINGS_START_KEY, 0);
+        numWeeks = getIntent().getIntExtra(NUM_WEEKS_KEY, 0);
+        Log.d("name", goalName);
+        Log.d("cost", Double.toString(goalCost));
+
+        final MainActivity m = this;
 
 
         client.PURCHASE.getPurchasesByAccount("5e164472322fa016762f374c",
@@ -159,6 +169,19 @@ public class MainActivity extends AppCompatActivity {
                             displayNotification();
                         }
 
+                        goal = new Goal(goalName, numWeeks, goalCost, savingsStart, weeklyAvg);
+
+                        ArrayList<FragmentUiModel> fragments = new ArrayList<>();
+                        fragments.add(new FragmentUiModel("Your Progress", PlaceholderFragment.newInstance()));
+                        fragments.add(new FragmentUiModel("Spend Trends", SpendTrendsFragment.newInstance()));
+
+                        ViewPager viewPager = findViewById(R.id.view_pager);
+                        viewPager.setAdapter(
+                                new SectionsPagerAdapter(m, getSupportFragmentManager(), fragments)
+                        );
+                        TabLayout tabLayout = findViewById(R.id.tabs);
+                        tabLayout.setupWithViewPager(viewPager);
+
                     }
 
                     @Override
@@ -167,18 +190,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("Error", error.getMessage());
                     }
                 });
-
-
-        ArrayList<FragmentUiModel> fragments = new ArrayList<>();
-        fragments.add(new FragmentUiModel("Your Progress", PlaceholderFragment.newInstance()));
-        fragments.add(new FragmentUiModel("Spend Trends", SpendTrendsFragment.newInstance()));
-
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(
-                new SectionsPagerAdapter(this, getSupportFragmentManager(), fragments)
-        );
-        TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
 
 //        client.CUSTOMER.getCustomers(new NessieResultsListener() {
 //            @Override
@@ -221,6 +232,41 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "channel";
+            String description = "a channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void displayNotification()
+    {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_android_black_24dp)
+                .setContentTitle("Watch out!")
+                .setContentText("You're spending too much for this week.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat mNotificationMgr = NotificationManagerCompat.from(this);
+        Notification n = mBuilder.build();
+        //Log.d("debug", "displayNotification: " + n.toString());
+        mNotificationMgr.notify(1, n );
+
+
+
+    }
+
+
 
 
     private void createNotificationChannel() {
