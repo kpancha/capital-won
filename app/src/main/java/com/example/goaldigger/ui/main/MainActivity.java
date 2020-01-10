@@ -1,29 +1,22 @@
 package com.example.goaldigger;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import android.os.Bundle;
+import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.goaldigger.models.FragmentUiModel;
 import com.example.goaldigger.ui.main.PlaceholderFragment;
 import com.example.goaldigger.ui.main.SectionsPagerAdapter;
 import com.example.goaldigger.ui.main.SpendTrendsFragment;
 import com.google.android.material.tabs.TabLayout;
-import com.reimaginebanking.api.nessieandroidsdk.NessieResultsListener;
-import com.reimaginebanking.api.nessieandroidsdk.constants.TransactionMedium;
 import com.reimaginebanking.api.nessieandroidsdk.NessieError;
-import com.reimaginebanking.api.nessieandroidsdk.models.Customer;
-import com.reimaginebanking.api.nessieandroidsdk.models.Deposit;
-import com.reimaginebanking.api.nessieandroidsdk.models.PostResponse;
+import com.reimaginebanking.api.nessieandroidsdk.NessieResultsListener;
 import com.reimaginebanking.api.nessieandroidsdk.models.Purchase;
 import com.reimaginebanking.api.nessieandroidsdk.requestclients.NessieClient;
-import android.util.Log;
-
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
