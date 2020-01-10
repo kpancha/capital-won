@@ -1,6 +1,8 @@
 package com.example.goaldigger.ui.main;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -48,6 +51,7 @@ public class PlaceholderFragment extends Fragment {
         pageViewModel.setIndex(index);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
@@ -59,10 +63,41 @@ public class PlaceholderFragment extends Fragment {
 
           View v =  inflater.inflate(R.layout.fragment_main, container, false);
         ProgressBar circle = v.findViewById(R.id.progress);
-        circle.setProgress(50);
+        Double num = goal.getPercentSaved() * 100;
+        circle.setProgress(Math.toIntExact(Math.round(num)));
 
         ProgressBar bar = v.findViewById(R.id.determinateBar);
+        //Double percent = PERCENTofWEEKLYSPENDINGvsGOALs;
         bar.setProgress(20);
-          return v;
+
+
+        /*
+        String message = String.format("To afford a %s in %s weeks, you should spend %s a week." +
+                "Based on your average spending habits, you will be saving %s ", goal.getItemName(), Integer.toString(goal.getNumWeeksRem()),
+                Double.toString(goal.calcWeeklyGoal()), Double.toString(goal.getWeeklySavings()));
+
+         */
+        String message = String.format("To afford a %s in %s weeks, you should save this much money weekly. " +
+                        "Based on your average spending habits, you should cut down your weekly spending by $amount. ", goal.getItemName(), Integer.toString(goal.getNumWeeksRem()));
+        ((TextView) v.findViewById(R.id.heading)).setText(message);
+
+
+        String amtSpent = String.format("You have spent $%s of your $%s budget this week.", 10, 20 /*SPENTTHISWEEK, WEEKLYBUDGET*/);
+        ((TextView) v.findViewById(R.id.spent)).setText(amtSpent);
+
+        String savings = String.format("$%s saved", 5 /*AMOUNTSAVED*/);
+        ((TextView) v.findViewById(R.id.saved)).setText(savings);
+
+        String savedp = String.format("%s%% of goal", 8/*PERCENTOFTOTAL*/);
+        ((TextView) v.findViewById(R.id.savedpercent)).setText(savedp);
+
+        String remaining = String.format("$%s remaining", 10 /*REMAININGMONEY */);
+        ((TextView) v.findViewById(R.id.left)).setText(remaining);
+
+        String end = String.format("to reach $%s", 20/*GOALCOST*/);
+        ((TextView) v.findViewById(R.id.ending)).setText(end);
+
+        return v;
+        }
+
     }
-}

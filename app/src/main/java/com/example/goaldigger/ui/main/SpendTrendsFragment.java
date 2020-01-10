@@ -25,6 +25,10 @@ public class SpendTrendsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.spendtrends, container, false);
+        View v = inflater.inflate(R.layout.spendtrends, container, false);
+
+        //v.findViewById()
+
+        return v;
     }
 }
