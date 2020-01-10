@@ -31,6 +31,7 @@ import android.widget.ProgressBar;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
     private double savingsStart;
     private int numWeeks;
     public Goal goal;
+    private String merch1;
+    private String merch2;
+    private String merch3;
 
     public static String GOAL_NAME_KEY = "goalName";
     public static String GOAL_COST_KEY = "goalCost";
@@ -299,8 +303,55 @@ public class MainActivity extends AppCompatActivity {
         while (!pq.isEmpty()) {
             list.add(pq.remove().getKey());
         }
-        return list;
+
+        merch1 = list.get(0);
+        client.MERCHANT.getMerchant(merch1, new NessieResultsListener() {
+            @Override
+            public void onSuccess(Object result) {
+                Merchant m = (Merchant) result;
+                merch1 = m.getName();
+            }
+
+            @Override
+            public void onFailure(NessieError error) {
+                Log.e("Error", error.getMessage());
+            }
+        });
+
+        merch2 = list.get(1);
+        client.MERCHANT.getMerchant(merch2, new NessieResultsListener() {
+            @Override
+            public void onSuccess(Object result) {
+                Merchant m = (Merchant) result;
+                merch2 = m.getName();
+            }
+
+            @Override
+            public void onFailure(NessieError error) {
+                Log.e("Error", error.getMessage());
+            }
+        });
+
+        merch3 = list.get(2);
+        client.MERCHANT.getMerchant(merch3, new NessieResultsListener() {
+            @Override
+            public void onSuccess(Object result) {
+                Merchant m = (Merchant) result;
+                merch3 = m.getName();
+            }
+
+            @Override
+            public void onFailure(NessieError error) {
+                Log.e("Error", error.getMessage());
+            }
+        });
+
+        ArrayList<String> topMerchants = new ArrayList<String>(Arrays.asList(merch1, merch2, merch3) );
+        Log.d("topMerchants", topMerchants.toString());
+
+        return topMerchants;
     }
+
 }
 
 
