@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     String startYear = startDate.substring(0,4);
     String startMonth = startDate.substring(5,7);
     String startDay = startDate.substring(8);
+    Double weeklyAvg = 0.0;
 
     public NessieClient getClient() {
         return client;
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         Log.d("totalpurchase", totalPurchases.toString());
+                        weeklyAvg = totalPurchases/4;
+                        Log.d("initial week spendavg!", weeklyAvg.toString());
 //                        Log.d(purchases.get(6));
                         //System.out.print(customers.toString());
                         // do something with the list of customers here
