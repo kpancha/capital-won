@@ -19,3 +19,4 @@ public class Week {
         return moneySpent;
     }
 }
+
