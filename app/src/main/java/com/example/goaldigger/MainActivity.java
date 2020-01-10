@@ -49,12 +49,15 @@ public class MainActivity extends AppCompatActivity {
     String person1 = "5e173afc322fa016762f3794";
     String person2 = "5e173afc322fa016762f3795";
     String person3 = "5e173afb322fa016762f3796";
-    String startDate = "2020-01-10"; //CHANGE ONCE RECEIVE USER INPUT
+    String startDate = "2020-01-10"; //user input changed
     String startYear = startDate.substring(0,4);
     String startMonth = startDate.substring(5,7);
     String startDay = startDate.substring(8);
-    Double thisWeekSpending = 0.0; //CHANGE ONCE RECEIVE USER INPUT
+    Double thisWeekSpending = 0.0;
     Double weeklyAvg = 0.0;
+    Double thisWeekSaving = weeklyAvg-thisWeekSpending;  //use for circle
+
+
 
     Map<String, Double> categoryCost = new HashMap<>();
     ArrayList<String> allmerchIDS = new ArrayList<>();
@@ -66,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     private String merch1;
     private String merch2;
     private String merch3;
+
+    Double proportionSaved = thisWeekSaving/goalCost;  //use for circle
 
     public static String GOAL_NAME_KEY = "goalName";
     public static String GOAL_COST_KEY = "goalCost";
