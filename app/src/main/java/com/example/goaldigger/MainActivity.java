@@ -20,6 +20,7 @@ import com.reimaginebanking.api.nessieandroidsdk.models.PostResponse;
 import com.reimaginebanking.api.nessieandroidsdk.models.Purchase;
 import com.reimaginebanking.api.nessieandroidsdk.requestclients.NessieClient;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         ArrayList<FragmentUiModel> fragments = new ArrayList<>();
-        fragments.add(new FragmentUiModel("Title 1", PlaceholderFragment.newInstance()));
+        fragments.add(new FragmentUiModel("Your Progress", PlaceholderFragment.newInstance()));
         fragments.add(new FragmentUiModel("Spend Trends", SpendTrendsFragment.newInstance()));
 
         ViewPager viewPager = findViewById(R.id.view_pager);
