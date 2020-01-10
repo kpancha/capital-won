@@ -22,6 +22,7 @@ import com.reimaginebanking.api.nessieandroidsdk.constants.TransactionMedium;
 import com.reimaginebanking.api.nessieandroidsdk.NessieError;
 import com.reimaginebanking.api.nessieandroidsdk.models.Customer;
 import com.reimaginebanking.api.nessieandroidsdk.models.Deposit;
+import com.reimaginebanking.api.nessieandroidsdk.models.Merchant;
 import com.reimaginebanking.api.nessieandroidsdk.models.PostResponse;
 import com.reimaginebanking.api.nessieandroidsdk.models.Purchase;
 import com.reimaginebanking.api.nessieandroidsdk.requestclients.NessieClient;
@@ -31,7 +32,9 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     String startDay = startDate.substring(8);
     Double thisWeekSpending = 98.0; //CHANGE ONCE RECEIVE USER INPUT
     Double weeklyAvg = 0.0;
+
+    Map<String, Double> categoryCost = new HashMap<>();
+    ArrayList<String> allmerchIDS = new ArrayList<>();
     private String goalName;
     private double goalCost;
     private double savingsStart;
@@ -55,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     public static String GOAL_NAME_KEY = "goalName";
     public static String GOAL_COST_KEY = "goalCost";
     public static String SAVINGS_START_KEY = "savingsStart";
-
 
 
     public NessieClient getClient() {
@@ -87,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         Integer yearBefore = 0;
                         String strMonthBefore = "";
 
-                        if (startDate.charAt(6) == '1'){
+                        if (startMonth == "01"){
                             yearBefore = Integer.parseInt(startYear)-1; //just previous year
                             strMonthBefore = yearBefore.toString(); //previous year in String
                             String othersBefore = "12-" + startDay; //change month to string
@@ -100,19 +105,47 @@ public class MainActivity extends AppCompatActivity {
 
 
                         Log.d("beforeDate",strMonthBefore); //this is the date we will use to compare
+                        for (Purchase p: purchases){
+                            allmerchIDS.add(p.getMerchantId());
+                        }
 
+                        for(String merchID: allmerchIDS) {
+                            final String mID = merchID;
+                            client.MERCHANT.getMerchant(mID, new NessieResultsListener() {
+                                @Override
+                                public void onSuccess(Object result) {
+                                    Merchant merchant = (Merchant) result;
+                                    List<String> categories = merchant.getCategories();
+                                    //essentials
+                                    if (categories.contains("health")
+                                            | categories.contains("grocery_or_supermarket")
+                                            | categories.contains("car_repair")) {
+                                        Log.d("Essential", "This is an essential purchase.");
+                                        allmerchIDS.remove(mID);
+                                    } else{
+                                    }
+
+                                }
+
+                                @Override
+                                public void onFailure(NessieError error) {
+                                    Log.e("Error", error.getMessage());
+                                }
+                            });
+                        }
 
                         for (Purchase p : purchases){
                             if ((p.getPurchaseDate()).compareTo(strMonthBefore)>0){
-                                Log.d("time", p.getPurchaseDate());
-                                totalPurchases += p.getAmount();
+                                if (allmerchIDS.contains(p.getMerchantId())) {
+                                    Log.d("time", p.getPurchaseDate());
+                                    totalPurchases += p.getAmount();
+                                }
                             }
-
                             //Log.d("eachpurchase", p.getAmount().toString());
 
                         }
 
-                        Log.d("totalpurchase", totalPurchases.toString());
+                        //Log.d("totalpurchase", totalPurchases.toString());
                         weeklyAvg = totalPurchases/4;
                         Log.d("initial week spendavg!", weeklyAvg.toString());
 //                        Log.d(purchases.get(6));
@@ -134,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("Error", error.getMessage());
                     }
                 });
+
 
         ArrayList<FragmentUiModel> fragments = new ArrayList<>();
         fragments.add(new FragmentUiModel("Your Progress", PlaceholderFragment.newInstance()));
@@ -188,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -220,9 +255,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
-
 
 
 }
