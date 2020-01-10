@@ -79,6 +79,9 @@ public class Goal implements Parcelable {
         return (PRICE - remMoney) / PRICE;
     }
 
+    public double getRemMoney() {
+        return remMoney;
+    }
 
 
     public double calcWeeklyGoal() {

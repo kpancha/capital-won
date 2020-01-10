@@ -89,19 +89,19 @@ public class PlaceholderFragment extends Fragment {
         ((TextView) v.findViewById(R.id.heading)).setText(message);
 
 
-        String amtSpent = String.format("You have spent $%s of your $%s budget this week.", 10, 20 /*SPENTTHISWEEK, WEEKLYBUDGET*/);
+        String amtSpent = String.format("You have spent $%s of your $%s budget this week.", goal.getThisWeekSpending(), goal.calcWeeklyGoal() /*SPENTTHISWEEK, WEEKLYBUDGET*/);
         ((TextView) v.findViewById(R.id.spent)).setText(amtSpent);
 
-        String savings = String.format("$%s saved", 5 /*AMOUNTSAVED*/);
+        String savings = String.format("$%s saved", goal.getPRICE() - goal.getRemMoney() /*AMOUNTSAVED*/);
         ((TextView) v.findViewById(R.id.saved)).setText(savings);
 
-        String savedp = String.format("%s%% of goal", 8/*PERCENTOFTOTAL*/);
+        String savedp = String.format("%s%% of goal", num/*PERCENTOFTOTAL*/);
         ((TextView) v.findViewById(R.id.savedpercent)).setText(savedp);
 
-        String remaining = String.format("$%s remaining", 10 /*REMAININGMONEY */);
+        String remaining = String.format("$%s remaining", goal.getRemMoney() /*REMAININGMONEY */);
         ((TextView) v.findViewById(R.id.left)).setText(remaining);
 
-        String end = String.format("to reach $%s", 20/*GOALCOST*/);
+        String end = String.format("to reach $%s", goal.getPRICE()/*GOALCOST*/);
         ((TextView) v.findViewById(R.id.ending)).setText(end);
 
         return v;
