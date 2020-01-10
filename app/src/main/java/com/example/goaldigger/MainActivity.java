@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
                         for (Purchase p : purchases){
                             totalPurchases += p.getAmount();
                             //Log.d("eachpurchase", p.getAmount().toString());
+                            Log.d("time", p.getPurchaseDate());
                         }
                         Log.d("totalpurchase", totalPurchases.toString());
 //                        Log.d(purchases.get(6));
