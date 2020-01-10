@@ -50,10 +50,13 @@ public class MainActivity extends AppCompatActivity {
     private String goalName;
     private double goalCost;
     private double savingsStart;
+    private int numWeeks;
+    public Goal goal;
 
     public static String GOAL_NAME_KEY = "goalName";
     public static String GOAL_COST_KEY = "goalCost";
     public static String SAVINGS_START_KEY = "savingsStart";
+    public static String NUM_WEEKS_KEY = "numWeeks";
 
 
 
@@ -74,6 +77,11 @@ public class MainActivity extends AppCompatActivity {
         goalName = getIntent().getStringExtra(GOAL_NAME_KEY);
         goalCost = getIntent().getDoubleExtra(GOAL_COST_KEY, 0);
         savingsStart = getIntent().getDoubleExtra(SAVINGS_START_KEY, 0);
+        numWeeks = getIntent().getIntExtra(NUM_WEEKS_KEY, 0);
+        Log.d("name", goalName);
+        Log.d("cost", Double.toString(goalCost));
+
+        final MainActivity m = this;
 
 
         client.PURCHASE.getPurchasesByAccount("5e164472322fa016762f374c",
@@ -125,6 +133,19 @@ public class MainActivity extends AppCompatActivity {
                             displayNotification();
                         }
 
+                        goal = new Goal(goalName, numWeeks, goalCost, savingsStart, weeklyAvg);
+
+                        ArrayList<FragmentUiModel> fragments = new ArrayList<>();
+                        fragments.add(new FragmentUiModel("Your Progress", PlaceholderFragment.newInstance()));
+                        fragments.add(new FragmentUiModel("Spend Trends", SpendTrendsFragment.newInstance()));
+
+                        ViewPager viewPager = findViewById(R.id.view_pager);
+                        viewPager.setAdapter(
+                                new SectionsPagerAdapter(m, getSupportFragmentManager(), fragments)
+                        );
+                        TabLayout tabLayout = findViewById(R.id.tabs);
+                        tabLayout.setupWithViewPager(viewPager);
+
                     }
 
                     @Override
@@ -134,16 +155,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        ArrayList<FragmentUiModel> fragments = new ArrayList<>();
-        fragments.add(new FragmentUiModel("Title 1", PlaceholderFragment.newInstance()));
-        fragments.add(new FragmentUiModel("Spend Trends", SpendTrendsFragment.newInstance()));
-
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(
-                new SectionsPagerAdapter(this, getSupportFragmentManager(), fragments)
-        );
-        TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
 
 //        client.CUSTOMER.getCustomers(new NessieResultsListener() {
 //            @Override
