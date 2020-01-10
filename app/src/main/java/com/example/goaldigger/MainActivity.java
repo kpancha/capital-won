@@ -65,10 +65,13 @@ public class MainActivity extends AppCompatActivity {
 
 
                         for (Purchase p : purchases){
+                            if ((p.getPurchaseDate()).compareTo(strMonthBefore)>0){
+                                Log.d("time", p.getPurchaseDate());
+                                totalPurchases += p.getAmount();
+                            }
 
-                            totalPurchases += p.getAmount();
                             //Log.d("eachpurchase", p.getAmount().toString());
-                            Log.d("time", p.getPurchaseDate());
+
                         }
 
                         Log.d("totalpurchase", totalPurchases.toString());
