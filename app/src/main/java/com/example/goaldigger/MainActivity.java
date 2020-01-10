@@ -31,11 +31,13 @@ import android.widget.ProgressBar;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Calendar;
+import java.util.PriorityQueue;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     String startMonth = startDate.substring(5,7);
     String startDay = startDate.substring(8);
     Double thisWeekSpending = 98.0; //CHANGE ONCE RECEIVE USER INPUT
-    static Double weeklyAvg = 0.0;
+    Double weeklyAvg = 0.0;
 
     Map<String, Double> categoryCost = new HashMap<>();
     ArrayList<String> allmerchIDS = new ArrayList<>();
@@ -65,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
     public static String GOAL_COST_KEY = "goalCost";
     public static String SAVINGS_START_KEY = "savingsStart";
     public static String NUM_WEEKS_KEY = "numWeeks";
-//    public static String START_WEEKS_KEY = "numWeeks";
 
 
 
@@ -94,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
         final MainActivity m = this;
 
 
-        //Getting previous month purchases to calculate previous weekly spending
         client.PURCHASE.getPurchasesByAccount("5e164472322fa016762f374c",
                 new NessieResultsListener() {
                     @Override
@@ -173,10 +173,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         goal = new Goal(goalName, numWeeks, goalCost, savingsStart, weeklyAvg);
-                        goal.getStartDate();
-
-                        //adding fragments
-
 
                         ArrayList<FragmentUiModel> fragments = new ArrayList<>();
                         fragments.add(new FragmentUiModel("Your Progress", PlaceholderFragment.newInstance()));
@@ -188,6 +184,10 @@ public class MainActivity extends AppCompatActivity {
                         );
                         TabLayout tabLayout = findViewById(R.id.tabs);
                         tabLayout.setupWithViewPager(viewPager);
+
+                        List<String> l = findTopFreqs();
+                        //Log.d("freq1", l.get(0));
+                        //Log.d("freq2", l.get(1));
 
                     }
 
@@ -273,8 +273,34 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
+    public ArrayList<String> findTopFreqs() {
+        //Log.d("allMerchIDS", allmerchIDS.toString());
+        Map<String, Integer> freqMap = new HashMap<>();
+        for (String s : allmerchIDS) {
+            if (freqMap.containsKey(s)) {
+                int count = freqMap.get(s);
+                count++;
+                freqMap.put(s, count);
+            } else {
+                freqMap.put(s, 1);
+            }
+        }
+        //Log.d("hashmap", freqMap.toString());
+        PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>(freqMap.size(), new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> stringIntegerEntry, Map.Entry<String, Integer> t1) {
+                return t1.getValue().compareTo(stringIntegerEntry.getValue()); //should sort in descending order
+            }
+        });
+        for (Map.Entry<String, Integer> entry : freqMap.entrySet()) {
+            pq.add(entry);
+        }
+        ArrayList<String> list = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            list.add(pq.remove().getKey());
+        }
+        return list;
+    }
 }
 
 
