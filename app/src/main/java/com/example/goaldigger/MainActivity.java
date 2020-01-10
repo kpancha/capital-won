@@ -1,9 +1,15 @@
 package com.example.goaldigger;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.example.goaldigger.models.FragmentUiModel;
@@ -28,6 +34,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final static String CHANNEL_ID = "test";
+
 
     NessieClient client = NessieClient.getInstance("4db704c8f8b013300a4a960683da8399");
     String person1 = "5e173afc322fa016762f3794";
@@ -37,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     String startYear = startDate.substring(0,4);
     String startMonth = startDate.substring(5,7);
     String startDay = startDate.substring(8);
+    Double thisWeekSpending = 98.0; //CHANGE ONCE RECEIVE USER INPUT
     Double weeklyAvg = 0.0;
     private String goalName;
     private double goalCost;
@@ -46,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     public static String GOAL_COST_KEY = "goalCost";
     public static String SAVINGS_START_KEY = "savingsStart";
 
+
+
     public NessieClient getClient() {
         return client;
     }
@@ -54,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        createNotificationChannel();
+
+
+
+
 
         goalName = getIntent().getStringExtra(GOAL_NAME_KEY);
         goalCost = getIntent().getDoubleExtra(GOAL_COST_KEY, 0);
@@ -101,6 +117,14 @@ public class MainActivity extends AppCompatActivity {
 //                        Log.d(purchases.get(6));
                         //System.out.print(customers.toString());
                         // do something with the list of customers here
+
+
+                        //CHANGE from weekspending to weeksaving
+
+                        if (weeklyAvg > thisWeekSpending && thisWeekSpending > weeklyAvg-20) { //CHANGE to currently this week's spending using today's date
+                            displayNotification();
+                        }
+
                     }
 
                     @Override
@@ -162,6 +186,41 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "channel";
+            String description = "a channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void displayNotification()
+    {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_android_black_24dp)
+                .setContentTitle("Watch out!")
+                .setContentText("You're spending too much for this week.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat mNotificationMgr = NotificationManagerCompat.from(this);
+        Notification n = mBuilder.build();
+        //Log.d("debug", "displayNotification: " + n.toString());
+        mNotificationMgr.notify(1, n );
+
+
+
+    }
+
+
 
 
 
