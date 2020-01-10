@@ -51,6 +51,8 @@ public class Goal implements Parcelable {
         return (PRICE - remMoney) / PRICE;
     }
 
+    /*
+
     public double calcWeeklyGoal() {
         //calc weekly savings
         double weeklySavings = INIT_AVG - currWeek.getMoneySpent() > 0 ? INIT_AVG - currWeek.getMoneySpent() : 0;
@@ -59,12 +61,19 @@ public class Goal implements Parcelable {
         currWeek.setSpendingGoal(remWeeklyGoal);
         return remWeeklyGoal;
     }
+     */
 
     public boolean goalReached() {
         return remMoney <= 0;
     }
 
     public double getPRICE() { return PRICE; }
+
+    public String getItemName() { return itemName; }
+
+    public int getNumWeeksRem() { return numWeeksRem; }
+
+    //public double getWeeklySavings() { return INIT_AVG - calcWeeklyGoal(); }
 
     @Override
     public int describeContents() {
