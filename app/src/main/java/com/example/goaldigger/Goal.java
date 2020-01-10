@@ -121,5 +121,3 @@ public class Goal implements Parcelable {
         dest.writeDouble(this.INIT_AVG);
     }
 }
-
-
