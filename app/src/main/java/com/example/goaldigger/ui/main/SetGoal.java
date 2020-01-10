@@ -15,6 +15,8 @@ public class SetGoal extends AppCompatActivity {
 
     private Button createGoal;
 
+    private Button viewProgress;
+
     private TextInputEditText goalName;
 
     private TextInputEditText goalCost;
@@ -29,6 +31,7 @@ public class SetGoal extends AppCompatActivity {
         setContentView(R.layout.set_goal);
 
         createGoal = findViewById(R.id.button);
+        viewProgress = findViewById(R.id.button2);
         goalName = findViewById(R.id.textInputEditText2);
         goalCost = findViewById(R.id.textInputEditText3);
         numWeeks = findViewById(R.id.weeksInput);
@@ -45,6 +48,13 @@ public class SetGoal extends AppCompatActivity {
                 intent.putExtra(MainActivity.NUM_WEEKS_KEY, Integer.parseInt(numWeeks.getText().toString()));
                 startActivity(intent);
                 //moveToMain();
+            }
+        });
+
+        viewProgress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SetGoal.this, MainActivity.class));
             }
         });
     }
