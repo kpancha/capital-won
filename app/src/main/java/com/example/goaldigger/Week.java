@@ -6,6 +6,7 @@ public class Week {
     List<Purchase> purchaseList;
     double moneySpent;
     double spendingGoal;
+    
 
     public double calcMoneySpent() {
         return -1;
@@ -19,3 +20,4 @@ public class Week {
         return moneySpent;
     }
 }
+

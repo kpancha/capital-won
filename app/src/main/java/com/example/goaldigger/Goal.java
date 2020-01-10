@@ -1,10 +1,15 @@
 package com.example.goaldigger;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class Goal implements Parcelable {
     private Date startDate; //when goal starts
@@ -14,8 +19,11 @@ public class Goal implements Parcelable {
     private double remMoney;
     private String itemName;
     private int numWeeksRem;
+    private double thisWeekSpending;
     private Date firstDayofWeek;
     private Week currWeek;
+
+    private List<String> freqList;
 
     public Goal(String itemName, int numWeeks, double price, double moneySaved, double avgSpending) {
         this.itemName = itemName;
@@ -47,21 +55,44 @@ public class Goal implements Parcelable {
         }
     };
 
+    public void setFreqList(List<String> l) {
+        this.freqList = l;
+    }
+
+    public List<String> getFreqList() {
+        return freqList;
+    }
+
+    public void setThisWeekSpending(double n) {
+        this.thisWeekSpending = n;
+    }
+
+    public double getThisWeekSpending() {
+        return thisWeekSpending;
+    }
+
+    public String getStartDate(){
+        Log.d("checkstartdate",startDate.toString());
+        return (startDate.toString());
+    }
     public double getPercentSaved() {
         return (PRICE - remMoney) / PRICE;
     }
 
-    /*
+
 
     public double calcWeeklyGoal() {
         //calc weekly savings
+        /*
         double weeklySavings = INIT_AVG - currWeek.getMoneySpent() > 0 ? INIT_AVG - currWeek.getMoneySpent() : 0;
         remMoney -= weeklySavings;
         double remWeeklyGoal = remMoney / numWeeksRem;
         currWeek.setSpendingGoal(remWeeklyGoal);
-        return remWeeklyGoal;
+         */
+        // yo this isn't good below all it calculates is the first week goal
+        double i = INIT_AVG - (remMoney / numWeeksRem);
+        return i;
     }
-     */
 
     public boolean goalReached() {
         return remMoney <= 0;
@@ -90,3 +121,5 @@ public class Goal implements Parcelable {
         dest.writeDouble(this.INIT_AVG);
     }
 }
+
+

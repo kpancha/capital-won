@@ -9,6 +9,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -17,6 +18,7 @@ import com.example.goaldigger.ui.main.PlaceholderFragment;
 import com.example.goaldigger.ui.main.SectionsPagerAdapter;
 import com.example.goaldigger.ui.main.SpendTrendsFragment;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
 import com.reimaginebanking.api.nessieandroidsdk.NessieResultsListener;
 import com.reimaginebanking.api.nessieandroidsdk.constants.TransactionMedium;
 import com.reimaginebanking.api.nessieandroidsdk.NessieError;
@@ -31,10 +33,13 @@ import android.widget.ProgressBar;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
     private double savingsStart;
     private int numWeeks;
     public Goal goal;
+
+    private SharedPreferences mPreferences;
+    private String sharedPrefFile = "com.example.goaldigger";
 
     public static String GOAL_NAME_KEY = "goalName";
     public static String GOAL_COST_KEY = "goalCost";
@@ -86,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
         goalCost = getIntent().getDoubleExtra(GOAL_COST_KEY, 0);
         savingsStart = getIntent().getDoubleExtra(SAVINGS_START_KEY, 0);
         numWeeks = getIntent().getIntExtra(NUM_WEEKS_KEY, 0);
-        Log.d("name", goalName);
-        Log.d("cost", Double.toString(goalCost));
+        //Log.d("name", goalName);
+        //Log.d("cost", Double.toString(goalCost));
 
         final MainActivity m = this;
 
@@ -169,7 +177,22 @@ public class MainActivity extends AppCompatActivity {
                             displayNotification();
                         }
 
-                        goal = new Goal(goalName, numWeeks, goalCost, savingsStart, weeklyAvg);
+                        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+                        Gson gson = new Gson();
+                        if (goalName != null) {
+                            goal = new Goal(goalName, numWeeks, goalCost, savingsStart, weeklyAvg);
+                            goal.setThisWeekSpending(thisWeekSpending);
+                            goal.setFreqList(findTopFreqs());
+                            String jsonGoal = gson.toJson(goal);
+                            SharedPreferences.Editor editor = mPreferences.edit();
+                            editor.putString("goal", jsonGoal);
+                            editor.apply();
+                        } else {
+                            String goalString = mPreferences.getString("goal", "goal not found");
+                            Log.d("goalString", goalString);
+                            goal = gson.fromJson(goalString, Goal.class);
+                            Log.d("goal price", Double.toString(goal.getPRICE()));
+                        }
 
                         ArrayList<FragmentUiModel> fragments = new ArrayList<>();
                         fragments.add(new FragmentUiModel("Your Progress", PlaceholderFragment.newInstance()));
@@ -181,6 +204,10 @@ public class MainActivity extends AppCompatActivity {
                         );
                         TabLayout tabLayout = findViewById(R.id.tabs);
                         tabLayout.setupWithViewPager(viewPager);
+
+                        List<String> l = findTopFreqs();
+                        //Log.d("freq1", l.get(0));
+                        //Log.d("freq2", l.get(1));
 
                     }
 
@@ -266,6 +293,35 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+//;
+    public ArrayList<String> findTopFreqs() {
+        //Log.d("allMerchIDS", allmerchIDS.toString());
+        Map<String, Integer> freqMap = new HashMap<>();
+        for (String s : allmerchIDS) {
+            if (freqMap.containsKey(s)) {
+                int count = freqMap.get(s);
+                count++;
+                freqMap.put(s, count);
+            } else {
+                freqMap.put(s, 1);
+            }
+        }
+        //Log.d("hashmap", freqMap.toString());
+        PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>(freqMap.size(), new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> stringIntegerEntry, Map.Entry<String, Integer> t1) {
+                return t1.getValue().compareTo(stringIntegerEntry.getValue()); //should sort in descending order
+            }
+        });
+        for (Map.Entry<String, Integer> entry : freqMap.entrySet()) {
+            pq.add(entry);
+        }
+        ArrayList<String> list = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            list.add(pq.remove().getKey());
+        }
+        return list;
+    }
 }
 
 

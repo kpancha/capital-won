@@ -39,6 +39,7 @@ public class Purchase {
         return category;
     }
 
+
     public void setCategory(String s)
     {
         category = s;
