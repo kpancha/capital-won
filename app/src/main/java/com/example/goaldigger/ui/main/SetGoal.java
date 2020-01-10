@@ -21,6 +21,8 @@ public class SetGoal extends AppCompatActivity {
 
     private TextInputEditText savingsStart;
 
+    private TextInputEditText numWeeks;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,8 @@ public class SetGoal extends AppCompatActivity {
         createGoal = findViewById(R.id.button);
         goalName = findViewById(R.id.textInputEditText2);
         goalCost = findViewById(R.id.textInputEditText3);
+        numWeeks = findViewById(R.id.weeksInput);
+
         savingsStart = findViewById(R.id.textInputEditText);
 
         createGoal.setOnClickListener(new View.OnClickListener() {
@@ -38,6 +42,7 @@ public class SetGoal extends AppCompatActivity {
                 intent.putExtra(MainActivity.GOAL_NAME_KEY, goalName.getText().toString());
                 intent.putExtra(MainActivity.GOAL_COST_KEY, Double.parseDouble(goalCost.getText().toString()));
                 intent.putExtra(MainActivity.SAVINGS_START_KEY, Double.parseDouble(savingsStart.getText().toString()));
+                intent.putExtra(MainActivity.NUM_WEEKS_KEY, Integer.parseInt(numWeeks.getText().toString()));
                 startActivity(intent);
                 //moveToMain();
             }

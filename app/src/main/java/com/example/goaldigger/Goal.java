@@ -1,7 +1,12 @@
 package com.example.goaldigger;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Goal {
+public class Goal implements Parcelable {
     private Date startDate; //when goal starts
     private int numWeek; //what week it is
     private final double PRICE; //
@@ -21,6 +26,27 @@ public class Goal {
         this.INIT_AVG = avgSpending;
     }
 
+    public Goal(Parcel p) {
+        this.itemName = p.readString();
+        this.numWeeksRem = p.readInt();
+        this.startDate = new Date(p.readLong());
+        this.PRICE = p.readDouble();
+        this.remMoney = p.readDouble();
+        this.INIT_AVG = p.readDouble();
+    }
+
+    public static final Creator<Goal> CREATOR = new Creator<Goal>() {
+        @Override
+        public Goal createFromParcel(Parcel in) {
+            return new Goal(in);
+        }
+
+        @Override
+        public Goal[] newArray(int size) {
+            return new Goal[size];
+        }
+    };
+
     public double getPercentSaved() {
         return (PRICE - remMoney) / PRICE;
     }
@@ -36,5 +62,22 @@ public class Goal {
 
     public boolean goalReached() {
         return remMoney <= 0;
+    }
+
+    public double getPRICE() { return PRICE; }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.itemName);
+        dest.writeInt(this.numWeeksRem);
+        dest.writeLong(this.startDate.getTime());
+        dest.writeDouble(this.PRICE);
+        dest.writeDouble(this.remMoney);
+        dest.writeDouble(this.INIT_AVG);
     }
 }
