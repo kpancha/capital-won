@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -43,6 +44,13 @@ public class PlaceholderFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+
+          View v =  inflater.inflate(R.layout.fragment_main, container, false);
+        ProgressBar circle = v.findViewById(R.id.progress);
+        circle.setProgress(50);
+
+        ProgressBar bar = v.findViewById(R.id.determinateBar);
+        bar.setProgress(20);
+          return v;
     }
 }
