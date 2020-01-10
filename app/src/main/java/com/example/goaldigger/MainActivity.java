@@ -9,6 +9,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -17,6 +18,7 @@ import com.example.goaldigger.ui.main.PlaceholderFragment;
 import com.example.goaldigger.ui.main.SectionsPagerAdapter;
 import com.example.goaldigger.ui.main.SpendTrendsFragment;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
 import com.reimaginebanking.api.nessieandroidsdk.NessieResultsListener;
 import com.reimaginebanking.api.nessieandroidsdk.constants.TransactionMedium;
 import com.reimaginebanking.api.nessieandroidsdk.NessieError;
@@ -63,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
     private int numWeeks;
     public Goal goal;
 
+    private SharedPreferences mPreferences;
+    private String sharedPrefFile = "com.example.goaldigger";
+
     public static String GOAL_NAME_KEY = "goalName";
     public static String GOAL_COST_KEY = "goalCost";
     public static String SAVINGS_START_KEY = "savingsStart";
@@ -89,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
         goalCost = getIntent().getDoubleExtra(GOAL_COST_KEY, 0);
         savingsStart = getIntent().getDoubleExtra(SAVINGS_START_KEY, 0);
         numWeeks = getIntent().getIntExtra(NUM_WEEKS_KEY, 0);
-        Log.d("name", goalName);
-        Log.d("cost", Double.toString(goalCost));
+        //Log.d("name", goalName);
+        //Log.d("cost", Double.toString(goalCost));
 
         final MainActivity m = this;
 
@@ -172,7 +177,20 @@ public class MainActivity extends AppCompatActivity {
                             displayNotification();
                         }
 
-                        goal = new Goal(goalName, numWeeks, goalCost, savingsStart, weeklyAvg);
+                        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
+                        Gson gson = new Gson();
+                        if (goalName != null) {
+                            goal = new Goal(goalName, numWeeks, goalCost, savingsStart, weeklyAvg);
+                            String jsonGoal = gson.toJson(goal);
+                            SharedPreferences.Editor editor = mPreferences.edit();
+                            editor.putString("goal", jsonGoal);
+                            editor.apply();
+                        } else {
+                            String goalString = mPreferences.getString("goal", "goal not found");
+                            Log.d("goalString", goalString);
+                            goal = gson.fromJson(goalString, Goal.class);
+                            Log.d("goal price", Double.toString(goal.getPRICE()));
+                        }
 
                         ArrayList<FragmentUiModel> fragments = new ArrayList<>();
                         fragments.add(new FragmentUiModel("Your Progress", PlaceholderFragment.newInstance()));
