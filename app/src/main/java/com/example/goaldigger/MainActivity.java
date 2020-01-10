@@ -33,6 +33,7 @@ import android.widget.ProgressBar;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,12 +51,15 @@ public class MainActivity extends AppCompatActivity {
     String person1 = "5e173afc322fa016762f3794";
     String person2 = "5e173afc322fa016762f3795";
     String person3 = "5e173afb322fa016762f3796";
-    String startDate = "2020-01-10"; //CHANGE ONCE RECEIVE USER INPUT
+    String startDate = "2020-01-10"; //user input changed
     String startYear = startDate.substring(0,4);
     String startMonth = startDate.substring(5,7);
     String startDay = startDate.substring(8);
-    Double thisWeekSpending = 98.0; //CHANGE ONCE RECEIVE USER INPUT
+    Double thisWeekSpending = 0.0;
     Double weeklyAvg = 0.0;
+    Double thisWeekSaving = weeklyAvg-thisWeekSpending;  //use for circle
+
+
 
     Map<String, Double> categoryCost = new HashMap<>();
     ArrayList<String> allmerchIDS = new ArrayList<>();
@@ -64,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
     private double savingsStart;
     private int numWeeks;
     public Goal goal;
+    private String merch1;
+    private String merch2;
+    private String merch3;
+
+    Double proportionSaved = thisWeekSaving/goalCost;  //use for circle
 
     private SharedPreferences mPreferences;
     private String sharedPrefFile = "com.example.goaldigger";
@@ -151,6 +160,31 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                         }
+
+                        ///now let's do weekly purchases
+
+                        goal = new Goal(goalName, numWeeks, goalCost, savingsStart, weeklyAvg);
+                        startDate = goal.getStartDate(); //REFORMATE
+
+                        Integer prevWeekDate = Integer.parseInt(startDate.substring(8,10))-7; //starting date for the current (last) week
+                        String startingWeekPurchase = startDate.substring(0,8)+prevWeekDate.toString() + startDate.substring(10);
+                        //startingWeekPurchase is what we compare
+                        Log.d("test", startingWeekPurchase);
+
+
+//                        newDateString = sdf.format(d);
+
+                        for (Purchase p : purchases){
+                            if ((p.getPurchaseDate()).compareTo("2020-01-03")>=0){
+                                if (allmerchIDS.contains(p.getMerchantId())) {
+                                    Log.d("test2", p.getPurchaseDate());
+                                    thisWeekSpending += p.getAmount();
+                                }
+                            }
+                            Log.d("eachpurchase", p.getPurchaseDate().toString());
+                            Log.d("testpls", thisWeekSpending.toString());
+                        }
+
 
                         for (Purchase p : purchases){
                             if ((p.getPurchaseDate()).compareTo(strMonthBefore)>0){
@@ -317,9 +351,53 @@ public class MainActivity extends AppCompatActivity {
         while (!pq.isEmpty()) {
             list.add(pq.remove().getKey());
         }
-        return list;
+
+        merch1 = list.get(0);
+        client.MERCHANT.getMerchant(merch1, new NessieResultsListener() {
+            @Override
+            public void onSuccess(Object result) {
+                Merchant m = (Merchant) result;
+                merch1 = m.getName();
+            }
+
+            @Override
+            public void onFailure(NessieError error) {
+                Log.e("Error", error.getMessage());
+            }
+        });
+
+        merch2 = list.get(1);
+        client.MERCHANT.getMerchant(merch2, new NessieResultsListener() {
+            @Override
+            public void onSuccess(Object result) {
+                Merchant m = (Merchant) result;
+                merch2 = m.getName();
+            }
+
+            @Override
+            public void onFailure(NessieError error) {
+                Log.e("Error", error.getMessage());
+            }
+        });
+
+        merch3 = list.get(2);
+        client.MERCHANT.getMerchant(merch3, new NessieResultsListener() {
+            @Override
+            public void onSuccess(Object result) {
+                Merchant m = (Merchant) result;
+                merch3 = m.getName();
+            }
+
+            @Override
+            public void onFailure(NessieError error) {
+                Log.e("Error", error.getMessage());
+            }
+        });
+
+        ArrayList<String> topMerchants = new ArrayList<String>(Arrays.asList(merch1, merch2, merch3) );
+        Log.d("topMerchants", topMerchants.toString());
+
+        return topMerchants;
     }
 
 }
-
-
