@@ -38,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
     String startMonth = startDate.substring(5,7);
     String startDay = startDate.substring(8);
     Double weeklyAvg = 0.0;
+    private String goalName;
+    private double goalCost;
+    private double savingsStart;
+
+    public static String GOAL_NAME_KEY = "goalName";
+    public static String GOAL_COST_KEY = "goalCost";
+    public static String SAVINGS_START_KEY = "savingsStart";
 
     public NessieClient getClient() {
         return client;
@@ -47,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        goalName = getIntent().getStringExtra(GOAL_NAME_KEY);
+        goalCost = getIntent().getDoubleExtra(GOAL_COST_KEY, 0);
+        savingsStart = getIntent().getDoubleExtra(SAVINGS_START_KEY, 0);
+
 
         client.PURCHASE.getPurchasesByAccount("5e164472322fa016762f374c",
                 new NessieResultsListener() {

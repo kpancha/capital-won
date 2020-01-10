@@ -24,7 +24,7 @@ public class SetGoal extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.set_goal);
 
         createGoal = findViewById(R.id.button);
         goalName = findViewById(R.id.textInputEditText2);
@@ -34,7 +34,12 @@ public class SetGoal extends AppCompatActivity {
         createGoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveToMain();
+                Intent intent = new Intent(SetGoal.this, MainActivity.class);
+                intent.putExtra(MainActivity.GOAL_NAME_KEY, goalName.getText().toString());
+                intent.putExtra(MainActivity.GOAL_COST_KEY, Double.parseDouble(goalCost.getText().toString()));
+                intent.putExtra(MainActivity.SAVINGS_START_KEY, Double.parseDouble(savingsStart.getText().toString()));
+                startActivity(intent);
+                //moveToMain();
             }
         });
     }
