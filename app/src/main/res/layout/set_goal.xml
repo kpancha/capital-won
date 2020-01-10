@@ -26,10 +26,10 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create Goal"
+        android:text="Create Goal or View Progress"
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
-        android:textSize="30sp"
+        android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,9 +39,9 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/textInputEditText"
-        android:layout_width="255dp"
+        android:layout_width="wrap_content"
         android:layout_height="56dp"
-        android:hint="Enter starting amount saved"
+        android:hint="How much money have you already saved?"
         android:textAlignment="center"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -52,11 +52,11 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/weeksInput"
-        android:layout_width="255dp"
+        android:layout_width="wrap_content"
         android:layout_height="56dp"
+        android:hint="How many weeks do you want to save up?"
         android:inputType="number"
         android:textAlignment="center"
-        android:hint="How many weeks do you have?"
         app:layout_constraintBottom_toTopOf="@+id/textInputEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,9 +64,9 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/textInputEditText3"
-        android:layout_width="255dp"
+        android:layout_width="wrap_content"
         android:layout_height="56dp"
-        android:hint="Enter the cost of your goal"
+        android:hint="How much does it cost?"
         android:inputType="numberDecimal"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -89,14 +89,24 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/textInputEditText2"
-        android:layout_width="255dp"
+        android:layout_width="wrap_content"
         android:layout_height="56dp"
-        android:hint="Enter the name of your goal"
+        android:hint="What do you want to buy?"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.293" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:text="View my Progress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

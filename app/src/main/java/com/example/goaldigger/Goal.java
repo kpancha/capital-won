@@ -1,6 +1,10 @@
 package com.example.goaldigger;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +51,10 @@ public class Goal implements Parcelable {
         }
     };
 
+    public String getStartDate(){
+        Log.d("checkstartdate",startDate.toString());
+        return (startDate.toString());
+    }
     public double getPercentSaved() {
         return (PRICE - remMoney) / PRICE;
     }
@@ -90,3 +98,5 @@ public class Goal implements Parcelable {
         dest.writeDouble(this.INIT_AVG);
     }
 }
+
+
