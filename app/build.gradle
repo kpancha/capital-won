@@ -36,6 +36,7 @@ dependencies {
     compile "androidx.core:core-ktx:+"
     compile "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
 }
 repositories {
     mavenCentral()

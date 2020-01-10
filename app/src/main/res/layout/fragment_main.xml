@@ -54,6 +54,7 @@
         android:max="100"
         android:progress="80"
         android:progressDrawable="@drawable/circular"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/savingsProgressLabel" />
@@ -83,15 +84,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weeklyProgressLabel" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/pic"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="38dp"
         android:layout_marginTop="37dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="41dp"
-        android:src="@mipmap/ic_launcher_round"
+        android:src="@drawable/iphone"
         app:layout_constraintBottom_toBottomOf="@+id/progress"
         app:layout_constraintEnd_toEndOf="@+id/progress"
         app:layout_constraintStart_toStartOf="@+id/progress"
