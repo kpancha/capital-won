@@ -99,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
                         // do something with the list of customers here
 
 
+                        //CHANGE from weekspending to weeksaving
+
                         if (weeklyAvg > thisWeekSpending && thisWeekSpending > weeklyAvg-20) { //CHANGE to currently this week's spending using today's date
                             displayNotification();
                         }
