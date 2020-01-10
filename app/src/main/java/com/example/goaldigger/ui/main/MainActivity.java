@@ -21,6 +21,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final static String CHANNEL_ID = "test";
+
 
     NessieClient client = NessieClient.getInstance("4db704c8f8b013300a4a960683da8399");
     String person1 = "5e173afc322fa016762f3794";
@@ -30,7 +32,10 @@ public class MainActivity extends AppCompatActivity {
     String startYear = startDate.substring(0,4);
     String startMonth = startDate.substring(5,7);
     String startDay = startDate.substring(8);
+    Double thisWeekSpending = 98.0; //CHANGE ONCE RECEIVE USER INPUT
     Double weeklyAvg = 0.0;
+
+
 
     public NessieClient getClient() {
         return client;
@@ -40,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        createNotificationChannel();
+
+
+
+
 
         client.PURCHASE.getPurchasesByAccount("5e164472322fa016762f374c",
                 new NessieResultsListener() {
@@ -82,6 +92,14 @@ public class MainActivity extends AppCompatActivity {
 //                        Log.d(purchases.get(6));
                         //System.out.print(customers.toString());
                         // do something with the list of customers here
+
+
+                        //CHANGE from weekspending to weeksaving
+
+                        if (weeklyAvg > thisWeekSpending && thisWeekSpending > weeklyAvg-20) { //CHANGE to currently this week's spending using today's date
+                            displayNotification();
+                        }
+
                     }
 
                     @Override
@@ -143,6 +161,41 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "channel";
+            String description = "a channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void displayNotification()
+    {
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_android_black_24dp)
+                .setContentTitle("Watch out!")
+                .setContentText("You're spending too much for this week.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat mNotificationMgr = NotificationManagerCompat.from(this);
+        Notification n = mBuilder.build();
+        //Log.d("debug", "displayNotification: " + n.toString());
+        mNotificationMgr.notify(1, n );
+
+
+
+    }
+
+
 
 
 
