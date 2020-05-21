@@ -5,6 +5,6 @@ Goal Digger is an app conceptualized and developed by a group of six girls at th
 
 Software/frameworks used:
 - Java
-- XML file format
+- XML markup language
 - Android Visual Studio
 - Capital One's [Nessie API](http://api.reimaginebanking.com/)
